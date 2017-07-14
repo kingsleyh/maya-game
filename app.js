@@ -10390,6 +10390,23 @@ var _elm_lang$html$Html_Events$Options = F2(
 		return {stopPropagation: a, preventDefault: b};
 	});
 
+var _kingsleyh$mayagame$Main$outlineSet = {
+	ctor: '::',
+	_0: 'outline_square',
+	_1: {
+		ctor: '::',
+		_0: 'outline_star',
+		_1: {
+			ctor: '::',
+			_0: 'outline_circle',
+			_1: {
+				ctor: '::',
+				_0: 'outline_rectangle',
+				_1: {ctor: '[]'}
+			}
+		}
+	}
+};
 var _kingsleyh$mayagame$Main$roundToZero = function (i) {
 	return (_elm_lang$core$Native_Utils.cmp(i, 0) > -1) ? i : 0;
 };
@@ -10406,7 +10423,8 @@ var _kingsleyh$mayagame$Main$init = {
 		itemToFind: '',
 		foundItems: 0,
 		score: 0,
-		startedGame: false
+		startedGame: false,
+		levelComplete: false
 	},
 	_1: _elm_lang$core$Platform_Cmd$none
 };
@@ -10424,32 +10442,15 @@ var _kingsleyh$mayagame$Main$getStringAtIndex = F3(
 		}
 	});
 var _kingsleyh$mayagame$Main$getRandomItemFile = function (list) {
-	var items = {
-		ctor: '::',
-		_0: 'outline_square',
-		_1: {
-			ctor: '::',
-			_0: 'outline_star',
-			_1: {
-				ctor: '::',
-				_0: 'outline_circle',
-				_1: {
-					ctor: '::',
-					_0: 'outline_rectangle',
-					_1: {ctor: '[]'}
-				}
-			}
-		}
-	};
 	var randItems = A2(
 		_elm_lang$core$List$indexedMap,
-		_kingsleyh$mayagame$Main$getStringAtIndex(items),
+		_kingsleyh$mayagame$Main$getStringAtIndex(_kingsleyh$mayagame$Main$outlineSet),
 		list);
 	return randItems;
 };
-var _kingsleyh$mayagame$Main$Model = F5(
-	function (a, b, c, d, e) {
-		return {randomItems: a, itemToFind: b, foundItems: c, score: d, startedGame: e};
+var _kingsleyh$mayagame$Main$Model = F6(
+	function (a, b, c, d, e, f) {
+		return {randomItems: a, itemToFind: b, foundItems: c, score: d, startedGame: e, levelComplete: f};
 	});
 var _kingsleyh$mayagame$Main$SelectItem = function (a) {
 	return {ctor: 'SelectItem', _0: a};
@@ -10480,71 +10481,9 @@ var _kingsleyh$mayagame$Main$row = function (item) {
 			_1: {ctor: '[]'}
 		});
 };
-var _kingsleyh$mayagame$Main$gameView = function (model) {
-	return A2(
-		_elm_lang$html$Html$div,
-		{ctor: '[]'},
-		{
-			ctor: '::',
-			_0: A2(
-				_elm_lang$html$Html$div,
-				{ctor: '[]'},
-				{
-					ctor: '::',
-					_0: _elm_lang$html$Html$text(
-						A2(
-							_elm_lang$core$Basics_ops['++'],
-							'Score: ',
-							_elm_lang$core$Basics$toString(model.score))),
-					_1: {ctor: '[]'}
-				}),
-			_1: {
-				ctor: '::',
-				_0: A2(
-					_elm_lang$html$Html$table,
-					{ctor: '[]'},
-					A2(_elm_lang$core$List$map, _kingsleyh$mayagame$Main$row, model.randomItems)),
-				_1: {
-					ctor: '::',
-					_0: A2(
-						_elm_lang$html$Html$div,
-						{ctor: '[]'},
-						{
-							ctor: '::',
-							_0: A2(
-								_elm_lang$html$Html$h2,
-								{ctor: '[]'},
-								{
-									ctor: '::',
-									_0: _elm_lang$html$Html$text('Click the shapes above that match this shape:'),
-									_1: {ctor: '[]'}
-								}),
-							_1: {
-								ctor: '::',
-								_0: A2(
-									_elm_lang$html$Html$img,
-									{
-										ctor: '::',
-										_0: _elm_lang$html$Html_Attributes$src(
-											A2(
-												_elm_lang$core$Basics_ops['++'],
-												'assets/',
-												A2(_elm_lang$core$Basics_ops['++'], model.itemToFind, '.png'))),
-										_1: {ctor: '[]'}
-									},
-									{ctor: '[]'}),
-								_1: {ctor: '[]'}
-							}
-						}),
-					_1: {ctor: '[]'}
-				}
-			}
-		});
-};
 var _kingsleyh$mayagame$Main$RandomShapes = function (a) {
 	return {ctor: 'RandomShapes', _0: a};
 };
-var _kingsleyh$mayagame$Main$StartGame = {ctor: 'StartGame'};
 var _kingsleyh$mayagame$Main$update = F2(
 	function (msg, model) {
 		var _p1 = msg;
@@ -10557,7 +10496,7 @@ var _kingsleyh$mayagame$Main$update = F2(
 					ctor: '_Tuple2',
 					_0: _elm_lang$core$Native_Utils.update(
 						model,
-						{startedGame: true, foundItems: 0}),
+						{startedGame: true, foundItems: 0, levelComplete: false}),
 					_1: A2(
 						_elm_lang$core$Random$generate,
 						_kingsleyh$mayagame$Main$RandomShapes,
@@ -10607,10 +10546,93 @@ var _kingsleyh$mayagame$Main$update = F2(
 						return _elm_lang$core$Native_Utils.eq(i.value, updatedModel.itemToFind);
 					},
 					updatedModel.randomItems);
-				var cmd = _elm_lang$core$List$isEmpty(expectedItems) ? _kingsleyh$mayagame$Main$fire(_kingsleyh$mayagame$Main$StartGame) : _elm_lang$core$Platform_Cmd$none;
-				return {ctor: '_Tuple2', _0: updatedModel, _1: cmd};
+				return {
+					ctor: '_Tuple2',
+					_0: _elm_lang$core$Native_Utils.update(
+						updatedModel,
+						{
+							levelComplete: _elm_lang$core$List$isEmpty(expectedItems)
+						}),
+					_1: _elm_lang$core$Platform_Cmd$none
+				};
 		}
 	});
+var _kingsleyh$mayagame$Main$StartGame = {ctor: 'StartGame'};
+var _kingsleyh$mayagame$Main$nextOrItemToFind = function (model) {
+	return model.levelComplete ? A2(
+		_elm_lang$html$Html$img,
+		{
+			ctor: '::',
+			_0: _elm_lang$html$Html_Events$onClick(_kingsleyh$mayagame$Main$StartGame),
+			_1: {
+				ctor: '::',
+				_0: _elm_lang$html$Html_Attributes$src('assets/next.png'),
+				_1: {ctor: '[]'}
+			}
+		},
+		{ctor: '[]'}) : A2(
+		_elm_lang$html$Html$div,
+		{ctor: '[]'},
+		{
+			ctor: '::',
+			_0: A2(
+				_elm_lang$html$Html$h2,
+				{ctor: '[]'},
+				{
+					ctor: '::',
+					_0: _elm_lang$html$Html$text('Click the shapes above that match this shape:'),
+					_1: {ctor: '[]'}
+				}),
+			_1: {
+				ctor: '::',
+				_0: A2(
+					_elm_lang$html$Html$img,
+					{
+						ctor: '::',
+						_0: _elm_lang$html$Html_Attributes$src(
+							A2(
+								_elm_lang$core$Basics_ops['++'],
+								'assets/',
+								A2(_elm_lang$core$Basics_ops['++'], model.itemToFind, '.png'))),
+						_1: {ctor: '[]'}
+					},
+					{ctor: '[]'}),
+				_1: {ctor: '[]'}
+			}
+		});
+};
+var _kingsleyh$mayagame$Main$gameView = function (model) {
+	return A2(
+		_elm_lang$html$Html$div,
+		{ctor: '[]'},
+		{
+			ctor: '::',
+			_0: A2(
+				_elm_lang$html$Html$div,
+				{ctor: '[]'},
+				{
+					ctor: '::',
+					_0: _elm_lang$html$Html$text(
+						A2(
+							_elm_lang$core$Basics_ops['++'],
+							'Score: ',
+							_elm_lang$core$Basics$toString(model.score))),
+					_1: {ctor: '[]'}
+				}),
+			_1: {
+				ctor: '::',
+				_0: A2(
+					_elm_lang$html$Html$table,
+					{ctor: '[]'},
+					A2(_elm_lang$core$List$map, _kingsleyh$mayagame$Main$row, model.randomItems)),
+				_1: {
+					ctor: '::',
+					_0: _kingsleyh$mayagame$Main$nextOrItemToFind(model),
+					_1: {ctor: '[]'}
+				}
+			}
+		});
+};
 var _kingsleyh$mayagame$Main$view = function (model) {
 	return A2(
 		_elm_lang$html$Html$div,
@@ -10618,17 +10640,17 @@ var _kingsleyh$mayagame$Main$view = function (model) {
 		{
 			ctor: '::',
 			_0: model.startedGame ? _kingsleyh$mayagame$Main$gameView(model) : A2(
-				_elm_lang$html$Html$button,
+				_elm_lang$html$Html$img,
 				{
 					ctor: '::',
 					_0: _elm_lang$html$Html_Events$onClick(_kingsleyh$mayagame$Main$StartGame),
-					_1: {ctor: '[]'}
+					_1: {
+						ctor: '::',
+						_0: _elm_lang$html$Html_Attributes$src('assets/play.png'),
+						_1: {ctor: '[]'}
+					}
 				},
-				{
-					ctor: '::',
-					_0: _elm_lang$html$Html$text('PLAY'),
-					_1: {ctor: '[]'}
-				}),
+				{ctor: '[]'}),
 			_1: {ctor: '[]'}
 		});
 };

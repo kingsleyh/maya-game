@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
-rm -rf ~/.maya-game
-mkdir ~/.maya-game
-cp -R out/* ~/.maya-game
-echo "now do: git checkout gh-pages"
-echo "then pub.sh"
+rm -rf assets images
+rm index.html
+rm app.js
+cp -R  ~/.maya-game/* .
+echo "now do: git add . && git commit -m 'updates' && git push"

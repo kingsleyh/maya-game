@@ -5,16 +5,25 @@
 	<meta charset="utf-8" />
 	<meta name="viewport" content="width=device-width, initial-scale=1" />
 	<!--<link rel="stylesheet" href="assets/css/main.css" />-->
-<script src="http://localhost:61052/livereload.js"></script></head>
-<body>
+
+	<style>
+		.lock-screen {
+			height: 100%;
+			overflow: hidden;
+			width: 100%;
+			position: fixed;
+		}
+	</style>
+<script src="http://localhost:56345/livereload.js"></script></head>
+<body class="lock-screen">
 
 <!-- Wrapper -->
 <div id="wrapper" class="divided"></div>
 
 <script src="app.js"></script>
 <script>
-	var node = document.getElementById('wrapper');
-	var app = Elm.Main.embed(node);
+    var node = document.getElementById('wrapper');
+    var app = Elm.Main.embed(node);
 </script>
 
 </body>

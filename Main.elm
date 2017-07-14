@@ -10,6 +10,7 @@ import Task
 
 -- MAIN
 
+
 main : Program Never Model Msg
 main =
     Html.program
@@ -35,6 +36,7 @@ type alias Model =
     , score : Int
     , startedGame : Bool
     , levelComplete : Bool
+    , levelInfo : LevelInfo
     }
 
 
@@ -46,6 +48,7 @@ init =
       , score = 0
       , startedGame = False
       , levelComplete = False
+      , levelInfo = { level = Level1, size = 1 }
       }
     , Cmd.none
     )
@@ -62,6 +65,67 @@ type Msg
     | SelectItem Item
 
 
+type Level
+    = Level1
+    | Level2
+    | Level3
+    | Level4
+    | Level5
+    | Level6
+    | Level7
+    | Level8
+    | Level9
+
+
+type alias LevelInfo =
+    { level : Level, size : Int }
+
+
+simpleOutline : List String
+simpleOutline =
+    [ "outline_square", "outline_star", "outline_circle", "outline_rectangle", "outline_triangle" ]
+
+
+simpleFilled : List String
+simpleFilled =
+    [ "red_square"
+    , "red_star"
+    , "red_circle"
+    , "red_rectangle"
+    , "red_triangle"
+    , "blue_square"
+    , "blue_star"
+    , "blue_circle"
+    , "blue_rectangle"
+    , "blue_triangle"
+    , "green_square"
+    , "green_star"
+    , "green_circle"
+    , "green_rectangle"
+    , "green_triangle"
+    , "purple_square"
+    , "purple_star"
+    , "purple_circle"
+    , "purple_rectangle"
+    , "purple_triangle"
+    , "orange_square"
+    , "orange_star"
+    , "orange_circle"
+    , "orange_rectangle"
+    , "orange_triangle"
+    , "yellow_square"
+    , "yellow_star"
+    , "yellow_circle"
+    , "yellow_rectangle"
+    , "yellow_triangle"
+    , "brown_square"
+    , "brown_star"
+    , "brown_circle"
+    , "brown_rectangle"
+    , "brown_triangle"
+    ]
+
+
 
 -- UPDATE
 
@@ -74,15 +138,18 @@ update msg model =
 
         StartGame ->
             let
-                _ =
-                    Debug.log "starting: " ""
+                ( _, maxRand ) =
+                    getIconSetForLevel model.levelInfo
+
+                { level, size } =
+                    model.levelInfo
             in
-                ( { model | startedGame = True, foundItems = 0, levelComplete = False }, Random.generate RandomShapes (Random.list 4 (int 0 3)) )
+                ( { model | startedGame = True, foundItems = 0, levelComplete = False }, Random.generate RandomShapes (Random.list size (int 0 maxRand)) )
 
         RandomShapes list ->
             let
                 randomItems =
-                    getRandomItemFile list
+                    getRandomItemFile model.levelInfo list
 
                 itemToFind =
                     Maybe.withDefault (Item 0 "outline_square") (List.head randomItems)
@@ -104,13 +171,10 @@ update msg model =
                 expectedItems =
                     List.filter (\i -> i.value == updatedModel.itemToFind) updatedModel.randomItems
 
-                --                cmd =
-                --                    if List.isEmpty expectedItems then
-                --                        fire StartGame
-                --                    else
-                --                        Cmd.none
+                updatedLevelInfo =
+                    calculateLevelInfo updatedModel.score
             in
-                ( { updatedModel | levelComplete = List.isEmpty expectedItems }, Cmd.none )
+                ( { updatedModel | levelComplete = List.isEmpty expectedItems, levelInfo = updatedLevelInfo }, Cmd.none )
 
 
 fire : msg -> Cmd msg
@@ -126,22 +190,70 @@ roundToZero i =
         0
 
 
+calculateLevelInfo : Int -> LevelInfo
+calculateLevelInfo score =
+    if score == 0 then
+        { level = Level1, size = 1 }
+    else if score == 1 then
+        { level = Level2, size = 2 }
+    else if score == 2 then
+        { level = Level2, size = 2 }
+    else if score == 3 then
+        { level = Level3, size = 3 }
+    else if score == 4 then
+        { level = Level4, size = 4 }
+    else if score == 5 then
+        { level = Level5, size = 5 }
+    else if score == 6 then
+        { level = Level6, size = 6 }
+    else if score == 7 then
+        { level = Level7, size = 7 }
+    else if score == 8 then
+        { level = Level8, size = 8 }
+    else
+        { level = Level9, size = 8 }
+
+
+getIconSetForLevel : LevelInfo -> ( List String, Int )
+getIconSetForLevel { level, size } =
+    case level of
+        Level1 ->
+            ( simpleOutline, getLength simpleOutline )
+
+        Level2 ->
+            ( simpleOutline, getLength simpleOutline )
+
+        Level3 ->
+            ( simpleOutline, getLength simpleOutline )
+
+        Level4 ->
+            ( simpleOutline, getLength simpleOutline )
+
+        _ ->
+            let
+                list =
+                    simpleOutline
+                        ++ simpleFilled
+            in
+                ( list, getLength list )
+
+
+getLength : List String -> Int
+getLength list =
+    (List.length list) - 1
+
+
 
 -- VIEW
 
 
-outlineSet : List String
-outlineSet =
-    [ "outline_square", "outline_star", "outline_circle", "outline_rectangle" ]
-
-
-getRandomItemFile : List Int -> List Item
-getRandomItemFile list =
+getRandomItemFile : LevelInfo -> List Int -> List Item
+getRandomItemFile levelInfo list =
     let
-        randItems =
-            List.indexedMap (getStringAtIndex outlineSet) list
+        ( iconList, _ ) =
+            getIconSetForLevel levelInfo
     in
-        randItems
+        List.indexedMap (getStringAtIndex iconList) list
 
 
 getStringAtIndex : List String -> Int -> Int -> Item
@@ -160,7 +272,7 @@ view model =
         [ if model.startedGame then
             gameView model
           else
-            img [ onClick StartGame, src "assets/play.png" ] [ ]
+            img [ onClick StartGame, src "assets/play.png" ] []
         ]
 
 
@@ -176,7 +288,7 @@ gameView model =
 nextOrItemToFind : Model -> Html Msg
 nextOrItemToFind model =
     if model.levelComplete then
-        img [ onClick StartGame, src "assets/next.png" ] [ ]
+        img [ onClick StartGame, src "assets/next.png" ] []
     else
         div []
             [ h2 [] [ text "Click the shapes above that match this shape:" ]

@@ -34,6 +34,7 @@ type alias Model =
     , foundItems : Int
     , score : Int
     , startedGame : Bool
+    , levelComplete : Bool
     }
 
 
@@ -44,6 +45,7 @@ init =
       , foundItems = 0
       , score = 0
       , startedGame = False
+      , levelComplete = False
       }
     , Cmd.none
     )
@@ -75,7 +77,7 @@ update msg model =
                 _ =
                     Debug.log "starting: " ""
             in
-                ( { model | startedGame = True, foundItems = 0 }, Random.generate RandomShapes (Random.list 4 (int 0 3)) )
+                ( { model | startedGame = True, foundItems = 0, levelComplete = False }, Random.generate RandomShapes (Random.list 4 (int 0 3)) )
 
         RandomShapes list ->
             let
@@ -102,13 +104,13 @@ update msg model =
                 expectedItems =
                     List.filter (\i -> i.value == updatedModel.itemToFind) updatedModel.randomItems
 
-                cmd =
-                    if List.isEmpty expectedItems then
-                        fire StartGame
-                    else
-                        Cmd.none
+                --                cmd =
+                --                    if List.isEmpty expectedItems then
+                --                        fire StartGame
+                --                    else
+                --                        Cmd.none
             in
-                ( updatedModel, cmd )
+                ( { updatedModel | levelComplete = List.isEmpty expectedItems }, Cmd.none )
 
 
 fire : msg -> Cmd msg
@@ -128,14 +130,16 @@ roundToZero i =
 -- VIEW
 
 
+outlineSet : List String
+outlineSet =
+    [ "outline_square", "outline_star", "outline_circle", "outline_rectangle" ]
+
+
 getRandomItemFile : List Int -> List Item
 getRandomItemFile list =
     let
-        items =
-            [ "outline_square", "outline_star", "outline_circle", "outline_rectangle" ]
-
         randItems =
-            List.indexedMap (getStringAtIndex items) list
+            List.indexedMap (getStringAtIndex outlineSet) list
     in
         randItems
 
@@ -156,7 +160,7 @@ view model =
         [ if model.startedGame then
             gameView model
           else
-            button [ onClick StartGame ] [ text "PLAY" ]
+            img [ onClick StartGame, src "assets/play.png" ] [ ]
         ]
 
 
@@ -165,11 +169,19 @@ gameView model =
     div []
         [ div [] [ text ("Score: " ++ (toString model.score)) ]
         , table [] (List.map row model.randomItems)
-        , div []
+        , nextOrItemToFind model
+        ]
+
+
+nextOrItemToFind : Model -> Html Msg
+nextOrItemToFind model =
+    if model.levelComplete then
+        img [ onClick StartGame, src "assets/next.png" ] [ ]
+    else
+        div []
             [ h2 [] [ text "Click the shapes above that match this shape:" ]
             , img [ src ("assets/" ++ model.itemToFind ++ ".png") ] []
             ]
-        ]
 
 
 row : Item -> Html Msg

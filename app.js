@@ -10390,7 +10390,160 @@ var _elm_lang$html$Html_Events$Options = F2(
 		return {stopPropagation: a, preventDefault: b};
 	});
 
-var _kingsleyh$mayagame$Main$outlineSet = {
+var _kingsleyh$mayagame$Main$getLength = function (list) {
+	return _elm_lang$core$List$length(list) - 1;
+};
+var _kingsleyh$mayagame$Main$roundToZero = function (i) {
+	return (_elm_lang$core$Native_Utils.cmp(i, 0) > -1) ? i : 0;
+};
+var _kingsleyh$mayagame$Main$fire = function (msg) {
+	return A2(
+		_elm_lang$core$Task$perform,
+		_elm_lang$core$Basics$identity,
+		_elm_lang$core$Task$succeed(msg));
+};
+var _kingsleyh$mayagame$Main$simpleFilled = {
+	ctor: '::',
+	_0: 'red_square',
+	_1: {
+		ctor: '::',
+		_0: 'red_star',
+		_1: {
+			ctor: '::',
+			_0: 'red_circle',
+			_1: {
+				ctor: '::',
+				_0: 'red_rectangle',
+				_1: {
+					ctor: '::',
+					_0: 'red_triangle',
+					_1: {
+						ctor: '::',
+						_0: 'blue_square',
+						_1: {
+							ctor: '::',
+							_0: 'blue_star',
+							_1: {
+								ctor: '::',
+								_0: 'blue_circle',
+								_1: {
+									ctor: '::',
+									_0: 'blue_rectangle',
+									_1: {
+										ctor: '::',
+										_0: 'blue_triangle',
+										_1: {
+											ctor: '::',
+											_0: 'green_square',
+											_1: {
+												ctor: '::',
+												_0: 'green_star',
+												_1: {
+													ctor: '::',
+													_0: 'green_circle',
+													_1: {
+														ctor: '::',
+														_0: 'green_rectangle',
+														_1: {
+															ctor: '::',
+															_0: 'green_triangle',
+															_1: {
+																ctor: '::',
+																_0: 'purple_square',
+																_1: {
+																	ctor: '::',
+																	_0: 'purple_star',
+																	_1: {
+																		ctor: '::',
+																		_0: 'purple_circle',
+																		_1: {
+																			ctor: '::',
+																			_0: 'purple_rectangle',
+																			_1: {
+																				ctor: '::',
+																				_0: 'purple_triangle',
+																				_1: {
+																					ctor: '::',
+																					_0: 'orange_square',
+																					_1: {
+																						ctor: '::',
+																						_0: 'orange_star',
+																						_1: {
+																							ctor: '::',
+																							_0: 'orange_circle',
+																							_1: {
+																								ctor: '::',
+																								_0: 'orange_rectangle',
+																								_1: {
+																									ctor: '::',
+																									_0: 'orange_triangle',
+																									_1: {
+																										ctor: '::',
+																										_0: 'yellow_square',
+																										_1: {
+																											ctor: '::',
+																											_0: 'yellow_star',
+																											_1: {
+																												ctor: '::',
+																												_0: 'yellow_circle',
+																												_1: {
+																													ctor: '::',
+																													_0: 'yellow_rectangle',
+																													_1: {
+																														ctor: '::',
+																														_0: 'yellow_triangle',
+																														_1: {
+																															ctor: '::',
+																															_0: 'brown_square',
+																															_1: {
+																																ctor: '::',
+																																_0: 'brown_star',
+																																_1: {
+																																	ctor: '::',
+																																	_0: 'brown_circle',
+																																	_1: {
+																																		ctor: '::',
+																																		_0: 'brown_rectangle',
+																																		_1: {
+																																			ctor: '::',
+																																			_0: 'brown_triangle',
+																																			_1: {ctor: '[]'}
+																																		}
+																																	}
+																																}
+																															}
+																														}
+																													}
+																												}
+																											}
+																										}
+																									}
+																								}
+																							}
+																						}
+																					}
+																				}
+																			}
+																		}
+																	}
+																}
+															}
+														}
+													}
+												}
+											}
+										}
+									}
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+};
+var _kingsleyh$mayagame$Main$simpleOutline = {
 	ctor: '::',
 	_0: 'outline_square',
 	_1: {
@@ -10402,31 +10555,51 @@ var _kingsleyh$mayagame$Main$outlineSet = {
 			_1: {
 				ctor: '::',
 				_0: 'outline_rectangle',
-				_1: {ctor: '[]'}
+				_1: {
+					ctor: '::',
+					_0: 'outline_triangle',
+					_1: {ctor: '[]'}
+				}
 			}
 		}
 	}
 };
-var _kingsleyh$mayagame$Main$roundToZero = function (i) {
-	return (_elm_lang$core$Native_Utils.cmp(i, 0) > -1) ? i : 0;
-};
-var _kingsleyh$mayagame$Main$fire = function (msg) {
-	return A2(
-		_elm_lang$core$Task$perform,
-		_elm_lang$core$Basics$identity,
-		_elm_lang$core$Task$succeed(msg));
-};
-var _kingsleyh$mayagame$Main$init = {
-	ctor: '_Tuple2',
-	_0: {
-		randomItems: {ctor: '[]'},
-		itemToFind: '',
-		foundItems: 0,
-		score: 0,
-		startedGame: false,
-		levelComplete: false
-	},
-	_1: _elm_lang$core$Platform_Cmd$none
+var _kingsleyh$mayagame$Main$getIconSetForLevel = function (_p0) {
+	var _p1 = _p0;
+	var _p2 = _p1.level;
+	switch (_p2.ctor) {
+		case 'Level1':
+			return {
+				ctor: '_Tuple2',
+				_0: _kingsleyh$mayagame$Main$simpleOutline,
+				_1: _kingsleyh$mayagame$Main$getLength(_kingsleyh$mayagame$Main$simpleOutline)
+			};
+		case 'Level2':
+			return {
+				ctor: '_Tuple2',
+				_0: _kingsleyh$mayagame$Main$simpleOutline,
+				_1: _kingsleyh$mayagame$Main$getLength(_kingsleyh$mayagame$Main$simpleOutline)
+			};
+		case 'Level3':
+			return {
+				ctor: '_Tuple2',
+				_0: _kingsleyh$mayagame$Main$simpleOutline,
+				_1: _kingsleyh$mayagame$Main$getLength(_kingsleyh$mayagame$Main$simpleOutline)
+			};
+		case 'Level4':
+			return {
+				ctor: '_Tuple2',
+				_0: _kingsleyh$mayagame$Main$simpleOutline,
+				_1: _kingsleyh$mayagame$Main$getLength(_kingsleyh$mayagame$Main$simpleOutline)
+			};
+		default:
+			var list = A2(_elm_lang$core$Basics_ops['++'], _kingsleyh$mayagame$Main$simpleOutline, _kingsleyh$mayagame$Main$simpleFilled);
+			return {
+				ctor: '_Tuple2',
+				_0: list,
+				_1: _kingsleyh$mayagame$Main$getLength(list)
+			};
+	}
 };
 var _kingsleyh$mayagame$Main$Item = F2(
 	function (a, b) {
@@ -10434,23 +10607,29 @@ var _kingsleyh$mayagame$Main$Item = F2(
 	});
 var _kingsleyh$mayagame$Main$getStringAtIndex = F3(
 	function (list, index, i) {
-		var _p0 = A2(_elm_community$list_extra$List_Extra$getAt, i, list);
-		if (_p0.ctor === 'Just') {
-			return A2(_kingsleyh$mayagame$Main$Item, index, _p0._0);
+		var _p3 = A2(_elm_community$list_extra$List_Extra$getAt, i, list);
+		if (_p3.ctor === 'Just') {
+			return A2(_kingsleyh$mayagame$Main$Item, index, _p3._0);
 		} else {
 			return A2(_kingsleyh$mayagame$Main$Item, 0, 'outline_square');
 		}
 	});
-var _kingsleyh$mayagame$Main$getRandomItemFile = function (list) {
-	var randItems = A2(
-		_elm_lang$core$List$indexedMap,
-		_kingsleyh$mayagame$Main$getStringAtIndex(_kingsleyh$mayagame$Main$outlineSet),
-		list);
-	return randItems;
-};
-var _kingsleyh$mayagame$Main$Model = F6(
-	function (a, b, c, d, e, f) {
-		return {randomItems: a, itemToFind: b, foundItems: c, score: d, startedGame: e, levelComplete: f};
+var _kingsleyh$mayagame$Main$getRandomItemFile = F2(
+	function (levelInfo, list) {
+		var _p4 = _kingsleyh$mayagame$Main$getIconSetForLevel(levelInfo);
+		var iconList = _p4._0;
+		return A2(
+			_elm_lang$core$List$indexedMap,
+			_kingsleyh$mayagame$Main$getStringAtIndex(iconList),
+			list);
+	});
+var _kingsleyh$mayagame$Main$Model = F7(
+	function (a, b, c, d, e, f, g) {
+		return {randomItems: a, itemToFind: b, foundItems: c, score: d, startedGame: e, levelComplete: f, levelInfo: g};
+	});
+var _kingsleyh$mayagame$Main$LevelInfo = F2(
+	function (a, b) {
+		return {level: a, size: b};
 	});
 var _kingsleyh$mayagame$Main$SelectItem = function (a) {
 	return {ctor: 'SelectItem', _0: a};
@@ -10484,79 +10663,6 @@ var _kingsleyh$mayagame$Main$row = function (item) {
 var _kingsleyh$mayagame$Main$RandomShapes = function (a) {
 	return {ctor: 'RandomShapes', _0: a};
 };
-var _kingsleyh$mayagame$Main$update = F2(
-	function (msg, model) {
-		var _p1 = msg;
-		switch (_p1.ctor) {
-			case 'NoOp':
-				return {ctor: '_Tuple2', _0: model, _1: _elm_lang$core$Platform_Cmd$none};
-			case 'StartGame':
-				var _p2 = A2(_elm_lang$core$Debug$log, 'starting: ', '');
-				return {
-					ctor: '_Tuple2',
-					_0: _elm_lang$core$Native_Utils.update(
-						model,
-						{startedGame: true, foundItems: 0, levelComplete: false}),
-					_1: A2(
-						_elm_lang$core$Random$generate,
-						_kingsleyh$mayagame$Main$RandomShapes,
-						A2(
-							_elm_lang$core$Random$list,
-							4,
-							A2(_elm_lang$core$Random$int, 0, 3)))
-				};
-			case 'RandomShapes':
-				var randomItems = _kingsleyh$mayagame$Main$getRandomItemFile(_p1._0);
-				var itemToFind = A2(
-					_elm_lang$core$Maybe$withDefault,
-					A2(_kingsleyh$mayagame$Main$Item, 0, 'outline_square'),
-					_elm_lang$core$List$head(randomItems));
-				return {
-					ctor: '_Tuple2',
-					_0: _elm_lang$core$Native_Utils.update(
-						model,
-						{randomItems: randomItems, itemToFind: itemToFind.value}),
-					_1: _elm_lang$core$Platform_Cmd$none
-				};
-			default:
-				var _p3 = _p1._0;
-				var updatedModel = function () {
-					if (_elm_lang$core$Native_Utils.eq(_p3.value, model.itemToFind)) {
-						var updatedRandomItems = A3(
-							_elm_community$list_extra$List_Extra$replaceIf,
-							function (i) {
-								return _elm_lang$core$Native_Utils.eq(i.id, _p3.id);
-							},
-							A2(_kingsleyh$mayagame$Main$Item, _p3.id, 'tick'),
-							model.randomItems);
-						return _elm_lang$core$Native_Utils.update(
-							model,
-							{randomItems: updatedRandomItems, foundItems: model.foundItems + 1, score: model.score + 1});
-					} else {
-						return _elm_lang$core$Native_Utils.update(
-							model,
-							{
-								score: _kingsleyh$mayagame$Main$roundToZero(model.score - 1)
-							});
-					}
-				}();
-				var expectedItems = A2(
-					_elm_lang$core$List$filter,
-					function (i) {
-						return _elm_lang$core$Native_Utils.eq(i.value, updatedModel.itemToFind);
-					},
-					updatedModel.randomItems);
-				return {
-					ctor: '_Tuple2',
-					_0: _elm_lang$core$Native_Utils.update(
-						updatedModel,
-						{
-							levelComplete: _elm_lang$core$List$isEmpty(expectedItems)
-						}),
-					_1: _elm_lang$core$Platform_Cmd$none
-				};
-		}
-	});
 var _kingsleyh$mayagame$Main$StartGame = {ctor: 'StartGame'};
 var _kingsleyh$mayagame$Main$nextOrItemToFind = function (model) {
 	return model.levelComplete ? A2(
@@ -10654,6 +10760,111 @@ var _kingsleyh$mayagame$Main$view = function (model) {
 			_1: {ctor: '[]'}
 		});
 };
+var _kingsleyh$mayagame$Main$NoOp = {ctor: 'NoOp'};
+var _kingsleyh$mayagame$Main$Level9 = {ctor: 'Level9'};
+var _kingsleyh$mayagame$Main$Level8 = {ctor: 'Level8'};
+var _kingsleyh$mayagame$Main$Level7 = {ctor: 'Level7'};
+var _kingsleyh$mayagame$Main$Level6 = {ctor: 'Level6'};
+var _kingsleyh$mayagame$Main$Level5 = {ctor: 'Level5'};
+var _kingsleyh$mayagame$Main$Level4 = {ctor: 'Level4'};
+var _kingsleyh$mayagame$Main$Level3 = {ctor: 'Level3'};
+var _kingsleyh$mayagame$Main$Level2 = {ctor: 'Level2'};
+var _kingsleyh$mayagame$Main$Level1 = {ctor: 'Level1'};
+var _kingsleyh$mayagame$Main$init = {
+	ctor: '_Tuple2',
+	_0: {
+		randomItems: {ctor: '[]'},
+		itemToFind: '',
+		foundItems: 0,
+		score: 0,
+		startedGame: false,
+		levelComplete: false,
+		levelInfo: {level: _kingsleyh$mayagame$Main$Level1, size: 1}
+	},
+	_1: _elm_lang$core$Platform_Cmd$none
+};
+var _kingsleyh$mayagame$Main$calculateLevelInfo = function (score) {
+	return _elm_lang$core$Native_Utils.eq(score, 0) ? {level: _kingsleyh$mayagame$Main$Level1, size: 1} : (_elm_lang$core$Native_Utils.eq(score, 1) ? {level: _kingsleyh$mayagame$Main$Level2, size: 2} : (_elm_lang$core$Native_Utils.eq(score, 2) ? {level: _kingsleyh$mayagame$Main$Level2, size: 2} : (_elm_lang$core$Native_Utils.eq(score, 3) ? {level: _kingsleyh$mayagame$Main$Level3, size: 3} : (_elm_lang$core$Native_Utils.eq(score, 4) ? {level: _kingsleyh$mayagame$Main$Level4, size: 4} : (_elm_lang$core$Native_Utils.eq(score, 5) ? {level: _kingsleyh$mayagame$Main$Level5, size: 5} : (_elm_lang$core$Native_Utils.eq(score, 6) ? {level: _kingsleyh$mayagame$Main$Level6, size: 6} : (_elm_lang$core$Native_Utils.eq(score, 7) ? {level: _kingsleyh$mayagame$Main$Level7, size: 7} : (_elm_lang$core$Native_Utils.eq(score, 8) ? {level: _kingsleyh$mayagame$Main$Level8, size: 8} : {level: _kingsleyh$mayagame$Main$Level9, size: 8}))))))));
+};
+var _kingsleyh$mayagame$Main$update = F2(
+	function (msg, model) {
+		var _p5 = msg;
+		switch (_p5.ctor) {
+			case 'NoOp':
+				return {ctor: '_Tuple2', _0: model, _1: _elm_lang$core$Platform_Cmd$none};
+			case 'StartGame':
+				var _p6 = model.levelInfo;
+				var level = _p6.level;
+				var size = _p6.size;
+				var _p7 = _kingsleyh$mayagame$Main$getIconSetForLevel(model.levelInfo);
+				var maxRand = _p7._1;
+				return {
+					ctor: '_Tuple2',
+					_0: _elm_lang$core$Native_Utils.update(
+						model,
+						{startedGame: true, foundItems: 0, levelComplete: false}),
+					_1: A2(
+						_elm_lang$core$Random$generate,
+						_kingsleyh$mayagame$Main$RandomShapes,
+						A2(
+							_elm_lang$core$Random$list,
+							size,
+							A2(_elm_lang$core$Random$int, 0, maxRand)))
+				};
+			case 'RandomShapes':
+				var randomItems = A2(_kingsleyh$mayagame$Main$getRandomItemFile, model.levelInfo, _p5._0);
+				var itemToFind = A2(
+					_elm_lang$core$Maybe$withDefault,
+					A2(_kingsleyh$mayagame$Main$Item, 0, 'outline_square'),
+					_elm_lang$core$List$head(randomItems));
+				return {
+					ctor: '_Tuple2',
+					_0: _elm_lang$core$Native_Utils.update(
+						model,
+						{randomItems: randomItems, itemToFind: itemToFind.value}),
+					_1: _elm_lang$core$Platform_Cmd$none
+				};
+			default:
+				var _p8 = _p5._0;
+				var updatedModel = function () {
+					if (_elm_lang$core$Native_Utils.eq(_p8.value, model.itemToFind)) {
+						var updatedRandomItems = A3(
+							_elm_community$list_extra$List_Extra$replaceIf,
+							function (i) {
+								return _elm_lang$core$Native_Utils.eq(i.id, _p8.id);
+							},
+							A2(_kingsleyh$mayagame$Main$Item, _p8.id, 'tick'),
+							model.randomItems);
+						return _elm_lang$core$Native_Utils.update(
+							model,
+							{randomItems: updatedRandomItems, foundItems: model.foundItems + 1, score: model.score + 1});
+					} else {
+						return _elm_lang$core$Native_Utils.update(
+							model,
+							{
+								score: _kingsleyh$mayagame$Main$roundToZero(model.score - 1)
+							});
+					}
+				}();
+				var expectedItems = A2(
+					_elm_lang$core$List$filter,
+					function (i) {
+						return _elm_lang$core$Native_Utils.eq(i.value, updatedModel.itemToFind);
+					},
+					updatedModel.randomItems);
+				var updatedLevelInfo = _kingsleyh$mayagame$Main$calculateLevelInfo(updatedModel.score);
+				return {
+					ctor: '_Tuple2',
+					_0: _elm_lang$core$Native_Utils.update(
+						updatedModel,
+						{
+							levelComplete: _elm_lang$core$List$isEmpty(expectedItems),
+							levelInfo: updatedLevelInfo
+						}),
+					_1: _elm_lang$core$Platform_Cmd$none
+				};
+		}
+	});
 var _kingsleyh$mayagame$Main$main = _elm_lang$html$Html$program(
 	{
 		init: _kingsleyh$mayagame$Main$init,
@@ -10661,7 +10872,6 @@ var _kingsleyh$mayagame$Main$main = _elm_lang$html$Html$program(
 		update: _kingsleyh$mayagame$Main$update,
 		subscriptions: _elm_lang$core$Basics$always(_elm_lang$core$Platform_Sub$none)
 	})();
-var _kingsleyh$mayagame$Main$NoOp = {ctor: 'NoOp'};
 
 var Elm = {};
 Elm['Main'] = Elm['Main'] || {};

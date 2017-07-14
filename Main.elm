@@ -10,7 +10,7 @@ import Task
 
 -- MAIN
 
-
+main : Program Never Model Msg
 main =
     Html.program
         { init = init

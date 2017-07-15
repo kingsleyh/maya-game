@@ -68,6 +68,8 @@ type Msg
 type Level
     = Level1
     | Level2
+    | Level3
+    | Level4
 
 
 type alias LevelInfo =
@@ -119,6 +121,21 @@ simpleFilled =
     ]
 
 
+princesses : List String
+princesses =
+    [ "rapunzel"
+    , "rhianna"
+    , "mulan"
+    , "pocahontis"
+    , "princess1"
+    , "belle"
+    , "ariel"
+    , "aurora"
+    , "cindarella"
+    , "snow_white"
+    ]
+
+
 
 -- UPDATE
 
@@ -151,7 +168,9 @@ update msg model =
 
         SelectItem item ->
             let
-                _ = Debug.log "SPLIT" (discardColour item.value)
+                _ =
+                    Debug.log "SPLIT" (discardColour item.value)
+
                 updatedModel =
                     if (discardColour item.value) == (discardColour model.itemToFind) then
                         let
@@ -173,10 +192,11 @@ update msg model =
 
 discardColour : String -> String
 discardColour v =
-  v
-  |> String.split "_"
-  |> LE.last
-  |> Maybe.withDefault "square"
+    v
+        |> String.split "_"
+        |> LE.last
+        |> Maybe.withDefault "square"
+
 
 fire : msg -> Cmd msg
 fire msg =
@@ -193,8 +213,12 @@ roundToZero i =
 
 calculateLevelInfo : Int -> LevelInfo
 calculateLevelInfo score =
-    if score >= 8 then
+    if score >= 8 && score < 12 then
         { level = Level2, size = 8 }
+    else if score >= 13 && score < 25 then
+        { level = Level3, size = 8 }
+    else if score >= 30 then
+        { level = Level4, size = 8 }
     else
         { level = Level1, size = 4 }
 
@@ -206,6 +230,17 @@ getIconSetForLevel { level, size } =
             ( simpleOutline, getLength simpleOutline )
 
         Level2 ->
+            let
+                list =
+                    simpleOutline
+                        ++ simpleFilled
+            in
+                ( list, getLength list )
+
+        Level3 ->
+            ( princesses, getLength princesses )
+
+        Level4 ->
             let
                 list =
                     simpleOutline
@@ -256,9 +291,9 @@ gameView : Model -> Html Msg
 gameView model =
     div []
         [ div [] [ text ("Score: " ++ (toString model.score)) ]
-        , table [] [
-           tr [] (List.map row (List.take 4 model.randomItems))
-           , tr [] (List.map row (List.drop 4 model.randomItems))
+        , table []
+            [ tr [] (List.map row (List.take 4 model.randomItems))
+            , tr [] (List.map row (List.drop 4 model.randomItems))
             ]
         , nextOrItemToFind model
         ]

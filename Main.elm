@@ -48,7 +48,7 @@ init =
       , score = 0
       , startedGame = False
       , levelComplete = False
-      , levelInfo = { level = Level1, size = 1 }
+      , levelInfo = { level = Level1, size = 4 }
       }
     , Cmd.none
     )
@@ -68,13 +68,6 @@ type Msg
 type Level
     = Level1
     | Level2
-    | Level3
-    | Level4
-    | Level5
-    | Level6
-    | Level7
-    | Level8
-    | Level9
 
 
 type alias LevelInfo =
@@ -158,8 +151,9 @@ update msg model =
 
         SelectItem item ->
             let
+                _ = Debug.log "SPLIT" (discardColour item.value)
                 updatedModel =
-                    if item.value == model.itemToFind then
+                    if (discardColour item.value) == (discardColour model.itemToFind) then
                         let
                             updatedRandomItems =
                                 LE.replaceIf (\i -> i.id == item.id) (Item item.id "tick") model.randomItems
@@ -169,13 +163,20 @@ update msg model =
                         { model | score = (roundToZero (model.score - 1)) }
 
                 expectedItems =
-                    List.filter (\i -> i.value == updatedModel.itemToFind) updatedModel.randomItems
+                    List.filter (\i -> (discardColour i.value) == (discardColour updatedModel.itemToFind)) updatedModel.randomItems
 
                 updatedLevelInfo =
                     calculateLevelInfo updatedModel.score
             in
                 ( { updatedModel | levelComplete = List.isEmpty expectedItems, levelInfo = updatedLevelInfo }, Cmd.none )
 
+
+discardColour : String -> String
+discardColour v =
+  v
+  |> String.split "_"
+  |> LE.last
+  |> Maybe.withDefault "square"
 
 fire : msg -> Cmd msg
 fire msg =
@@ -192,26 +193,10 @@ roundToZero i =
 
 calculateLevelInfo : Int -> LevelInfo
 calculateLevelInfo score =
-    if score == 0 then
-        { level = Level1, size = 1 }
-    else if score == 1 then
-        { level = Level2, size = 2 }
-    else if score == 2 then
-        { level = Level2, size = 2 }
-    else if score == 3 then
-        { level = Level3, size = 3 }
-    else if score == 4 then
-        { level = Level4, size = 4 }
-    else if score == 5 then
-        { level = Level5, size = 5 }
-    else if score == 6 then
-        { level = Level6, size = 6 }
-    else if score == 7 then
-        { level = Level7, size = 7 }
-    else if score == 8 then
-        { level = Level8, size = 8 }
+    if score >= 8 then
+        { level = Level2, size = 8 }
     else
-        { level = Level9, size = 8 }
+        { level = Level1, size = 4 }
 
 
 getIconSetForLevel : LevelInfo -> ( List String, Int )
@@ -221,15 +206,6 @@ getIconSetForLevel { level, size } =
             ( simpleOutline, getLength simpleOutline )
 
         Level2 ->
-            ( simpleOutline, getLength simpleOutline )
-
-        Level3 ->
-            ( simpleOutline, getLength simpleOutline )
-
-        Level4 ->
-            ( simpleOutline, getLength simpleOutline )
-
-        _ ->
             let
                 list =
                     simpleOutline
@@ -280,7 +256,10 @@ gameView : Model -> Html Msg
 gameView model =
     div []
         [ div [] [ text ("Score: " ++ (toString model.score)) ]
-        , table [] (List.map row model.randomItems)
+        , table [] [
+           tr [] (List.map row (List.take 4 model.randomItems))
+           , tr [] (List.map row (List.drop 4 model.randomItems))
+            ]
         , nextOrItemToFind model
         ]
 

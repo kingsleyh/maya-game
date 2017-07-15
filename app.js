@@ -10402,6 +10402,13 @@ var _kingsleyh$mayagame$Main$fire = function (msg) {
 		_elm_lang$core$Basics$identity,
 		_elm_lang$core$Task$succeed(msg));
 };
+var _kingsleyh$mayagame$Main$discardColour = function (v) {
+	return A2(
+		_elm_lang$core$Maybe$withDefault,
+		'square',
+		_elm_community$list_extra$List_Extra$last(
+			A2(_elm_lang$core$String$split, '_', v)));
+};
 var _kingsleyh$mayagame$Main$simpleFilled = {
 	ctor: '::',
 	_0: 'red_square',
@@ -10567,38 +10574,19 @@ var _kingsleyh$mayagame$Main$simpleOutline = {
 var _kingsleyh$mayagame$Main$getIconSetForLevel = function (_p0) {
 	var _p1 = _p0;
 	var _p2 = _p1.level;
-	switch (_p2.ctor) {
-		case 'Level1':
-			return {
-				ctor: '_Tuple2',
-				_0: _kingsleyh$mayagame$Main$simpleOutline,
-				_1: _kingsleyh$mayagame$Main$getLength(_kingsleyh$mayagame$Main$simpleOutline)
-			};
-		case 'Level2':
-			return {
-				ctor: '_Tuple2',
-				_0: _kingsleyh$mayagame$Main$simpleOutline,
-				_1: _kingsleyh$mayagame$Main$getLength(_kingsleyh$mayagame$Main$simpleOutline)
-			};
-		case 'Level3':
-			return {
-				ctor: '_Tuple2',
-				_0: _kingsleyh$mayagame$Main$simpleOutline,
-				_1: _kingsleyh$mayagame$Main$getLength(_kingsleyh$mayagame$Main$simpleOutline)
-			};
-		case 'Level4':
-			return {
-				ctor: '_Tuple2',
-				_0: _kingsleyh$mayagame$Main$simpleOutline,
-				_1: _kingsleyh$mayagame$Main$getLength(_kingsleyh$mayagame$Main$simpleOutline)
-			};
-		default:
-			var list = A2(_elm_lang$core$Basics_ops['++'], _kingsleyh$mayagame$Main$simpleOutline, _kingsleyh$mayagame$Main$simpleFilled);
-			return {
-				ctor: '_Tuple2',
-				_0: list,
-				_1: _kingsleyh$mayagame$Main$getLength(list)
-			};
+	if (_p2.ctor === 'Level1') {
+		return {
+			ctor: '_Tuple2',
+			_0: _kingsleyh$mayagame$Main$simpleOutline,
+			_1: _kingsleyh$mayagame$Main$getLength(_kingsleyh$mayagame$Main$simpleOutline)
+		};
+	} else {
+		var list = A2(_elm_lang$core$Basics_ops['++'], _kingsleyh$mayagame$Main$simpleOutline, _kingsleyh$mayagame$Main$simpleFilled);
+		return {
+			ctor: '_Tuple2',
+			_0: list,
+			_1: _kingsleyh$mayagame$Main$getLength(list)
+		};
 	}
 };
 var _kingsleyh$mayagame$Main$Item = F2(
@@ -10730,7 +10718,27 @@ var _kingsleyh$mayagame$Main$gameView = function (model) {
 				_0: A2(
 					_elm_lang$html$Html$table,
 					{ctor: '[]'},
-					A2(_elm_lang$core$List$map, _kingsleyh$mayagame$Main$row, model.randomItems)),
+					{
+						ctor: '::',
+						_0: A2(
+							_elm_lang$html$Html$tr,
+							{ctor: '[]'},
+							A2(
+								_elm_lang$core$List$map,
+								_kingsleyh$mayagame$Main$row,
+								A2(_elm_lang$core$List$take, 4, model.randomItems))),
+						_1: {
+							ctor: '::',
+							_0: A2(
+								_elm_lang$html$Html$tr,
+								{ctor: '[]'},
+								A2(
+									_elm_lang$core$List$map,
+									_kingsleyh$mayagame$Main$row,
+									A2(_elm_lang$core$List$drop, 4, model.randomItems))),
+							_1: {ctor: '[]'}
+						}
+					}),
 				_1: {
 					ctor: '::',
 					_0: _kingsleyh$mayagame$Main$nextOrItemToFind(model),
@@ -10761,13 +10769,6 @@ var _kingsleyh$mayagame$Main$view = function (model) {
 		});
 };
 var _kingsleyh$mayagame$Main$NoOp = {ctor: 'NoOp'};
-var _kingsleyh$mayagame$Main$Level9 = {ctor: 'Level9'};
-var _kingsleyh$mayagame$Main$Level8 = {ctor: 'Level8'};
-var _kingsleyh$mayagame$Main$Level7 = {ctor: 'Level7'};
-var _kingsleyh$mayagame$Main$Level6 = {ctor: 'Level6'};
-var _kingsleyh$mayagame$Main$Level5 = {ctor: 'Level5'};
-var _kingsleyh$mayagame$Main$Level4 = {ctor: 'Level4'};
-var _kingsleyh$mayagame$Main$Level3 = {ctor: 'Level3'};
 var _kingsleyh$mayagame$Main$Level2 = {ctor: 'Level2'};
 var _kingsleyh$mayagame$Main$Level1 = {ctor: 'Level1'};
 var _kingsleyh$mayagame$Main$init = {
@@ -10779,12 +10780,12 @@ var _kingsleyh$mayagame$Main$init = {
 		score: 0,
 		startedGame: false,
 		levelComplete: false,
-		levelInfo: {level: _kingsleyh$mayagame$Main$Level1, size: 1}
+		levelInfo: {level: _kingsleyh$mayagame$Main$Level1, size: 4}
 	},
 	_1: _elm_lang$core$Platform_Cmd$none
 };
 var _kingsleyh$mayagame$Main$calculateLevelInfo = function (score) {
-	return _elm_lang$core$Native_Utils.eq(score, 0) ? {level: _kingsleyh$mayagame$Main$Level1, size: 1} : (_elm_lang$core$Native_Utils.eq(score, 1) ? {level: _kingsleyh$mayagame$Main$Level2, size: 2} : (_elm_lang$core$Native_Utils.eq(score, 2) ? {level: _kingsleyh$mayagame$Main$Level2, size: 2} : (_elm_lang$core$Native_Utils.eq(score, 3) ? {level: _kingsleyh$mayagame$Main$Level3, size: 3} : (_elm_lang$core$Native_Utils.eq(score, 4) ? {level: _kingsleyh$mayagame$Main$Level4, size: 4} : (_elm_lang$core$Native_Utils.eq(score, 5) ? {level: _kingsleyh$mayagame$Main$Level5, size: 5} : (_elm_lang$core$Native_Utils.eq(score, 6) ? {level: _kingsleyh$mayagame$Main$Level6, size: 6} : (_elm_lang$core$Native_Utils.eq(score, 7) ? {level: _kingsleyh$mayagame$Main$Level7, size: 7} : (_elm_lang$core$Native_Utils.eq(score, 8) ? {level: _kingsleyh$mayagame$Main$Level8, size: 8} : {level: _kingsleyh$mayagame$Main$Level9, size: 8}))))))));
+	return (_elm_lang$core$Native_Utils.cmp(score, 8) > -1) ? {level: _kingsleyh$mayagame$Main$Level2, size: 8} : {level: _kingsleyh$mayagame$Main$Level1, size: 4};
 };
 var _kingsleyh$mayagame$Main$update = F2(
 	function (msg, model) {
@@ -10825,15 +10826,17 @@ var _kingsleyh$mayagame$Main$update = F2(
 					_1: _elm_lang$core$Platform_Cmd$none
 				};
 			default:
-				var _p8 = _p5._0;
+				var _p9 = _p5._0;
 				var updatedModel = function () {
-					if (_elm_lang$core$Native_Utils.eq(_p8.value, model.itemToFind)) {
+					if (_elm_lang$core$Native_Utils.eq(
+						_kingsleyh$mayagame$Main$discardColour(_p9.value),
+						_kingsleyh$mayagame$Main$discardColour(model.itemToFind))) {
 						var updatedRandomItems = A3(
 							_elm_community$list_extra$List_Extra$replaceIf,
 							function (i) {
-								return _elm_lang$core$Native_Utils.eq(i.id, _p8.id);
+								return _elm_lang$core$Native_Utils.eq(i.id, _p9.id);
 							},
-							A2(_kingsleyh$mayagame$Main$Item, _p8.id, 'tick'),
+							A2(_kingsleyh$mayagame$Main$Item, _p9.id, 'tick'),
 							model.randomItems);
 						return _elm_lang$core$Native_Utils.update(
 							model,
@@ -10849,10 +10852,16 @@ var _kingsleyh$mayagame$Main$update = F2(
 				var expectedItems = A2(
 					_elm_lang$core$List$filter,
 					function (i) {
-						return _elm_lang$core$Native_Utils.eq(i.value, updatedModel.itemToFind);
+						return _elm_lang$core$Native_Utils.eq(
+							_kingsleyh$mayagame$Main$discardColour(i.value),
+							_kingsleyh$mayagame$Main$discardColour(updatedModel.itemToFind));
 					},
 					updatedModel.randomItems);
 				var updatedLevelInfo = _kingsleyh$mayagame$Main$calculateLevelInfo(updatedModel.score);
+				var _p8 = A2(
+					_elm_lang$core$Debug$log,
+					'SPLIT',
+					_kingsleyh$mayagame$Main$discardColour(_p9.value));
 				return {
 					ctor: '_Tuple2',
 					_0: _elm_lang$core$Native_Utils.update(

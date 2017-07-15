@@ -10409,6 +10409,47 @@ var _kingsleyh$mayagame$Main$discardColour = function (v) {
 		_elm_community$list_extra$List_Extra$last(
 			A2(_elm_lang$core$String$split, '_', v)));
 };
+var _kingsleyh$mayagame$Main$princesses = {
+	ctor: '::',
+	_0: 'rapunzel',
+	_1: {
+		ctor: '::',
+		_0: 'rhianna',
+		_1: {
+			ctor: '::',
+			_0: 'mulan',
+			_1: {
+				ctor: '::',
+				_0: 'pocahontis',
+				_1: {
+					ctor: '::',
+					_0: 'princess1',
+					_1: {
+						ctor: '::',
+						_0: 'belle',
+						_1: {
+							ctor: '::',
+							_0: 'ariel',
+							_1: {
+								ctor: '::',
+								_0: 'aurora',
+								_1: {
+									ctor: '::',
+									_0: 'cindarella',
+									_1: {
+										ctor: '::',
+										_0: 'snow_white',
+										_1: {ctor: '[]'}
+									}
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+};
 var _kingsleyh$mayagame$Main$simpleFilled = {
 	ctor: '::',
 	_0: 'red_square',
@@ -10574,19 +10615,33 @@ var _kingsleyh$mayagame$Main$simpleOutline = {
 var _kingsleyh$mayagame$Main$getIconSetForLevel = function (_p0) {
 	var _p1 = _p0;
 	var _p2 = _p1.level;
-	if (_p2.ctor === 'Level1') {
-		return {
-			ctor: '_Tuple2',
-			_0: _kingsleyh$mayagame$Main$simpleOutline,
-			_1: _kingsleyh$mayagame$Main$getLength(_kingsleyh$mayagame$Main$simpleOutline)
-		};
-	} else {
-		var list = A2(_elm_lang$core$Basics_ops['++'], _kingsleyh$mayagame$Main$simpleOutline, _kingsleyh$mayagame$Main$simpleFilled);
-		return {
-			ctor: '_Tuple2',
-			_0: list,
-			_1: _kingsleyh$mayagame$Main$getLength(list)
-		};
+	switch (_p2.ctor) {
+		case 'Level1':
+			return {
+				ctor: '_Tuple2',
+				_0: _kingsleyh$mayagame$Main$simpleOutline,
+				_1: _kingsleyh$mayagame$Main$getLength(_kingsleyh$mayagame$Main$simpleOutline)
+			};
+		case 'Level2':
+			var list = A2(_elm_lang$core$Basics_ops['++'], _kingsleyh$mayagame$Main$simpleOutline, _kingsleyh$mayagame$Main$simpleFilled);
+			return {
+				ctor: '_Tuple2',
+				_0: list,
+				_1: _kingsleyh$mayagame$Main$getLength(list)
+			};
+		case 'Level3':
+			return {
+				ctor: '_Tuple2',
+				_0: _kingsleyh$mayagame$Main$princesses,
+				_1: _kingsleyh$mayagame$Main$getLength(_kingsleyh$mayagame$Main$princesses)
+			};
+		default:
+			var list = A2(_elm_lang$core$Basics_ops['++'], _kingsleyh$mayagame$Main$simpleOutline, _kingsleyh$mayagame$Main$simpleFilled);
+			return {
+				ctor: '_Tuple2',
+				_0: list,
+				_1: _kingsleyh$mayagame$Main$getLength(list)
+			};
 	}
 };
 var _kingsleyh$mayagame$Main$Item = F2(
@@ -10769,6 +10824,8 @@ var _kingsleyh$mayagame$Main$view = function (model) {
 		});
 };
 var _kingsleyh$mayagame$Main$NoOp = {ctor: 'NoOp'};
+var _kingsleyh$mayagame$Main$Level4 = {ctor: 'Level4'};
+var _kingsleyh$mayagame$Main$Level3 = {ctor: 'Level3'};
 var _kingsleyh$mayagame$Main$Level2 = {ctor: 'Level2'};
 var _kingsleyh$mayagame$Main$Level1 = {ctor: 'Level1'};
 var _kingsleyh$mayagame$Main$init = {
@@ -10785,7 +10842,7 @@ var _kingsleyh$mayagame$Main$init = {
 	_1: _elm_lang$core$Platform_Cmd$none
 };
 var _kingsleyh$mayagame$Main$calculateLevelInfo = function (score) {
-	return (_elm_lang$core$Native_Utils.cmp(score, 8) > -1) ? {level: _kingsleyh$mayagame$Main$Level2, size: 8} : {level: _kingsleyh$mayagame$Main$Level1, size: 4};
+	return ((_elm_lang$core$Native_Utils.cmp(score, 8) > -1) && (_elm_lang$core$Native_Utils.cmp(score, 12) < 0)) ? {level: _kingsleyh$mayagame$Main$Level2, size: 8} : (((_elm_lang$core$Native_Utils.cmp(score, 13) > -1) && (_elm_lang$core$Native_Utils.cmp(score, 25) < 0)) ? {level: _kingsleyh$mayagame$Main$Level3, size: 8} : ((_elm_lang$core$Native_Utils.cmp(score, 25) > -1) ? {level: _kingsleyh$mayagame$Main$Level4, size: 8} : {level: _kingsleyh$mayagame$Main$Level1, size: 4}));
 };
 var _kingsleyh$mayagame$Main$update = F2(
 	function (msg, model) {
